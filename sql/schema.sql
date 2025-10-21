@@ -1,6 +1,3 @@
--- TODO: is this needed for PostgreSQL?
-PRAGMA foreign_keys = ON;
-
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
     email TEXT,
@@ -15,7 +12,6 @@ CREATE TABLE IF NOT EXISTS authors (
     -- TODO: add relations between authors and books
 );
 
--- TODO: How can multiple admins be the contact for something?
 CREATE TABLE IF NOT EXISTS books (
     book_id INTEGER PRIMARY KEY,
     title TEXT,
@@ -23,7 +19,6 @@ CREATE TABLE IF NOT EXISTS books (
     condition TEXT,
     additional_info TEXT,
     checked_out BOOLEAN DEFAULT 0,
-    FOREIGN KEY (contact) REFERENCES users(user_id),
     -- Book can be checked out only by one user at a time
     FOREIGN KEY (checked_out_by) REFERENCES users(user_id)
 );
@@ -37,4 +32,20 @@ CREATE TABLE IF NOT EXISTS equipment (
     FOREIGN KEY (contact) REFERENCES users(user_id),
     -- Equipment can be checked out only by one user at a time
     FOREIGN KEY (checked_out_by) REFERENCES users(user_id)
-)
+);
+
+-- Composite tables
+CREATE TABLE IF NOT EXISTS manages_book (
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
+
+CREATE TABLE IF NOT EXISTS manages_equipment (
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
+);
+
+CREATE TABLE IF NOT EXISTS writes (
+    FOREIGN KEY (author_id) REFERENCES authors(author_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
