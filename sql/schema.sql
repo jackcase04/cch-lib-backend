@@ -1,51 +1,81 @@
-CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY,
-    email TEXT,
-    password TEXT,
-    name TEXT,
-    is_admin BOOLEAN DEFAULT 0
+-- TODO: Add on delete rules for foreign keys
+
+DROP TYPE IF EXISTS medium;
+CREATE TYPE medium AS enum ('physical', 'pdf');
+
+DROP TYPE IF EXISTS request_type;
+CREATE TYPE request_type AS enum ('checkout', 'return');
+
+DROP TABLE IF EXISTS user CASCADE;
+CREATE TABLE user (
+    user_id INTEGER NOT NULL PRIMARY KEY,
+    email VARCHAR(80) NOT NULL,
+    password VARCHAR(80) NOT NULL,
+    name VARCHAR(80) NOT NULL,
+    is_admin BOOLEAN NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS authors (
-    author_id INTEGER PRIMARY KEY,
-    name TEXT -- TODO: figure out how to have first middle and last
-    -- TODO: add relations between authors and books
+DROP TABLE IF EXISTS author CASCADE;
+CREATE TABLE author (
+    author_id INTEGER NOT NULL PRIMARY KEY,
+    name VARCHAR(80) NOT NULL
+    -- TODO: figure out how to have first middle and last
 );
 
-CREATE TABLE IF NOT EXISTS books (
-    book_id INTEGER PRIMARY KEY,
-    title TEXT,
-    edition TEXT,
-    condition TEXT,
-    additional_info TEXT,
-    checked_out BOOLEAN DEFAULT 0,
+DROP TABLE IF EXISTS book CASCADE;
+CREATE TABLE book (
+    book_id INTEGER NOT NULL PRIMARY KEY,
+    title VARCHAR(80) NOT NULL,
+    course VARCHAR(80),
+    book_edition VARCHAR(80),
+    condition medium NOT NULL,
+    isbn INTEGER,
+    additional_info VARCHAR(80),
+    checked_out BOOLEAN NOT NULL DEFAULT 0,
+    pdf_id INTEGER, 
     -- Book can be checked out only by one user at a time
-    FOREIGN KEY (checked_out_by) REFERENCES users(user_id)
+    checked_out_by INTEGER REFERENCES user(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS equipment (
-    equipment_id INTEGER PRIMARY KEY,
-    name TEXT,
-    class_requirement TEXT,
+DROP TABLE IF EXISTS equipment CASCADE;
+CREATE TABLE equipment (
+    equipment_id INTEGER NOT NULL PRIMARY KEY,
+    equipment_name VARCHAR(80) NOT NULL,
+    class_requirement VARCHAR(80),
     checked_out BOOLEAN DEFAULT 0,
-    additional_info TEXT,
-    FOREIGN KEY (contact) REFERENCES users(user_id),
+    additional_info VARCHAR(80),
+    contact INTEGER NOT NULL REFERENCES user(user_id),
     -- Equipment can be checked out only by one user at a time
-    FOREIGN KEY (checked_out_by) REFERENCES users(user_id)
+    checked_out_by INTEGER REFERENCES user(user_id)
 );
 
 -- Composite tables
-CREATE TABLE IF NOT EXISTS manages_book (
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (book_id) REFERENCES books(book_id)
+-- TODO: Do we need the next 2?
+DROP TABLE IF EXISTS manage_book CASCADE;
+CREATE TABLE manage_book (
+    user_id INTEGER NOT NULL REFERENCES user(user_id),
+    book_id INTEGER NOT NULL REFERENCES book(book_id)
 );
 
-CREATE TABLE IF NOT EXISTS manages_equipment (
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
+DROP TABLE IF EXISTS manage_equipment CASCADE;
+CREATE TABLE manage_equipment (
+    user_id INTEGER NOT NULL REFERENCES user(user_id),
+    equipment_id INTEGER NOT NULL REFERENCES equipment(equipment_id)
 );
 
-CREATE TABLE IF NOT EXISTS writes (
-    FOREIGN KEY (author_id) REFERENCES authors(author_id),
-    FOREIGN KEY (book_id) REFERENCES books(book_id)
+DROP TABLE IF EXISTS write CASCADE;
+CREATE TABLE write (
+    author_id INTEGER NOT NULL REFERENCES author(author_id),
+    book_id INTEGER NOT NULL REFERENCES book(book_id)
+);
+
+DROP TABLE IF EXISTS request CASCADE;
+CREATE TABLE request (
+    book_id INTEGER REFERENCES book(book_id),
+    equipment_id INTEGER REFERENCES equipment(equipment_id),
+    -- TODO: Add constraint to ensure only 1 resource can be refrenced
+    user_id INTEGER NOT NULL REFERENCES user(user_id),
+    time_requested TIMESTAMP NOT NULL,
+    approved BOOLEAN NOT NULL DEFAULT 0,
+    specific_type request_type NOT NULL
 );
