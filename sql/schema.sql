@@ -18,8 +18,9 @@ CREATE TABLE user (
 DROP TABLE IF EXISTS author CASCADE;
 CREATE TABLE author (
     author_id INTEGER NOT NULL PRIMARY KEY,
-    name VARCHAR(80) NOT NULL
-    -- TODO: figure out how to have first middle and last
+    f_name VARCHAR(80) NOT NULL,
+    m_init VARCHAR(80),
+    l_name VARCHAR(80) NOT NULL
 );
 
 DROP TABLE IF EXISTS book CASCADE;
