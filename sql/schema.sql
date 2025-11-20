@@ -41,6 +41,7 @@ CREATE TABLE book (
     additional_info VARCHAR(80),
     checked_out BOOLEAN NOT NULL DEFAULT FALSE,
     pdf_id INTEGER, 
+    contact INTEGER NOT NULL REFERENCES users(user_id),
     -- Book can be checked out only by one users at a time
     checked_out_by INTEGER REFERENCES users(user_id)
 );
@@ -54,18 +55,6 @@ CREATE TABLE equipment (
     contact INTEGER NOT NULL REFERENCES users(user_id),
     -- Equipment can be checked out only by one user at a time
     checked_out_by INTEGER REFERENCES users(user_id)
-);
-
--- Composite tables
--- TODO: Do we need the next 2?
-CREATE TABLE manage_book (
-    user_id INTEGER NOT NULL REFERENCES users(user_id),
-    book_id INTEGER NOT NULL REFERENCES book(book_id)
-);
-
-CREATE TABLE manage_equipment (
-    user_id INTEGER NOT NULL REFERENCES users(user_id),
-    equipment_id INTEGER NOT NULL REFERENCES equipment(equipment_id)
 );
 
 CREATE TABLE write (
