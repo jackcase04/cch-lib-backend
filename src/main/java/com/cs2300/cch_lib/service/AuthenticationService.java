@@ -3,6 +3,7 @@ package com.cs2300.cch_lib.service;
 
 import com.cs2300.cch_lib.dto.LoginUserDto;
 import com.cs2300.cch_lib.exception.InvalidLoginException;
+import com.cs2300.cch_lib.exception.InvalidSignupException;
 import com.cs2300.cch_lib.model.User;
 import com.cs2300.cch_lib.repository.UserRepository;
 import com.cs2300.cch_lib.dto.RegisterUserDto;
@@ -24,6 +25,12 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
+        User user = userRepository.getUserByEmail(input.getEmail());
+
+        if (user != null) {
+            throw new InvalidSignupException("User with that email already exists");
+        }
+
         return userRepository.signupUser(input);
     }
 
@@ -34,7 +41,7 @@ public class AuthenticationService {
             throw new InvalidLoginException("Invalid email or password");
         }
 
-        if (passwordEncoder.matches(input.getPassword(), user.password())) {
+        if (!passwordEncoder.matches(input.getPassword(), user.password())) {
             throw new InvalidLoginException("Invalid email or password");
         }
 
