@@ -1,6 +1,8 @@
 package com.cs2300.cch_lib.repository;
 
 import com.cs2300.cch_lib.dto.RegisterUserDto;
+import com.cs2300.cch_lib.model.User;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,7 +24,49 @@ public class UserRepository {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public long signupUser(RegisterUserDto dto) {
+    public User getUserByEmail(String email) {
+        String sql = """
+            SELECT * FROM users
+            WHERE email = :email;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("email", email);
+
+        return jdbc.queryForObject(sql, params, (rs, rowNum) ->
+                new User(
+                        rs.getInt("user_id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("name"),
+                        rs.getBoolean("is_admin")
+                )
+        );
+    }
+
+    public User getUserById(long user_id) {
+        String sql = """
+            SELECT * FROM users
+            WHERE user_id = :user_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("user_id", user_id);
+
+        return jdbc.queryForObject(sql, params, (rs, rowNum) ->
+                new User(
+                        rs.getInt("user_id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("name"),
+                        rs.getBoolean("is_admin")
+                )
+        );
+    }
+
+    public User signupUser(RegisterUserDto dto) {
         String sql = """
             INSERT INTO users (email, password, name, is_admin)
             VALUES (:email, :password, :name, :isAdmin)
@@ -38,6 +82,6 @@ public class UserRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(sql, new MapSqlParameterSource(params), keyHolder, new String[]{"user_id"});
 
-        return keyHolder.getKey().longValue();
+        return getUserById(keyHolder.getKey().longValue());
     }
 }

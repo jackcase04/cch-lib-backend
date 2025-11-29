@@ -1,5 +1,6 @@
 package com.cs2300.cch_lib.controller;
 
+import com.cs2300.cch_lib.dto.LoginUserDto;
 import com.cs2300.cch_lib.dto.RegisterUserDto;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +19,15 @@ public class AuthenticationController {
     public ResponseEntity<?> register(
             @RequestBody RegisterUserDto dto
     ) {
-        return ResponseEntity.ok(authenticationService.signup(dto));
+        return ResponseEntity.ok(
+                authenticationService.signup(dto)
+        );
     }
 
 //    @PostMapping("/login")
 //    public ResponseEntity<?> authenticate(
 //            @RequestBody LoginUserDto dto
 //    ) {
-//        try {
-//            User authenticatedUser = authenticationService.authenticate(dto);
-//            AuthResponse authResponse = new AuthResponse(authenticatedUser.getFullname(), authenticatedUser.getUsername());
 //
-//            return ResponseEntity.ok(authResponse);
-//        }
 //    }
 }
