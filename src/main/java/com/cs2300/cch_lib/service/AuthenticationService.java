@@ -1,12 +1,13 @@
 package com.cs2300.cch_lib.service;
 
 
-import com.cs2300.cch_lib.dto.LoginUserDto;
+import com.cs2300.cch_lib.dto.LoginRequest;
+import com.cs2300.cch_lib.dto.UserResponse;
 import com.cs2300.cch_lib.exception.InvalidLoginException;
 import com.cs2300.cch_lib.exception.InvalidSignupException;
 import com.cs2300.cch_lib.model.User;
 import com.cs2300.cch_lib.repository.UserRepository;
-import com.cs2300.cch_lib.dto.RegisterUserDto;
+import com.cs2300.cch_lib.dto.SignupRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +25,25 @@ public class AuthenticationService {
 
     }
 
-    public User signup(RegisterUserDto input) {
+    public UserResponse signup(SignupRequest input) {
         User user = userRepository.getUserByEmail(input.getEmail());
 
         if (user != null) {
             throw new InvalidSignupException("User with that email already exists");
         }
 
-        return userRepository.signupUser(input);
+        // if we get to this line, user is null
+        user = userRepository.signupUser(input);
+
+        return new UserResponse(
+                user.userId(),
+                user.email(),
+                user.name(),
+                user.isAdmin()
+        );
     }
 
-    public User login(LoginUserDto input) {
+    public UserResponse login(LoginRequest input) {
         User user = userRepository.getUserByEmail(input.getEmail());
 
         if (user == null) {
@@ -45,7 +54,11 @@ public class AuthenticationService {
             throw new InvalidLoginException("Invalid email or password");
         }
 
-        // TODO: Create session
-        return user;
+        return new UserResponse(
+                user.userId(),
+                user.email(),
+                user.name(),
+                user.isAdmin()
+        );
     }
 }

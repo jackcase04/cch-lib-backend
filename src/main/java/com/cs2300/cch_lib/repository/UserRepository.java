@@ -1,6 +1,6 @@
 package com.cs2300.cch_lib.repository;
 
-import com.cs2300.cch_lib.dto.RegisterUserDto;
+import com.cs2300.cch_lib.dto.SignupRequest;
 import com.cs2300.cch_lib.model.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -74,7 +74,7 @@ public class UserRepository {
         }
     }
 
-    public User signupUser(RegisterUserDto dto) {
+    public User signupUser(SignupRequest dto) {
         String sql = """
             INSERT INTO users (email, password, name, is_admin)
             VALUES (:email, :password, :name, :isAdmin)
