@@ -1,8 +1,6 @@
 package com.cs2300.cch_lib.controller;
 
-import com.cs2300.cch_lib.dto.LoginRequest;
-import com.cs2300.cch_lib.dto.SignupRequest;
-import com.cs2300.cch_lib.dto.UserResponse;
+import com.cs2300.cch_lib.dto.*;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(
+    public ResponseEntity<?> signup(
             @RequestBody SignupRequest dto,
             HttpSession session
     ) {
@@ -36,7 +34,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(
+    public ResponseEntity<?> login(
             @RequestBody LoginRequest dto,
             HttpSession session
     ) {
@@ -50,5 +48,33 @@ public class AuthenticationController {
                 HttpStatus.OK)
                 .body(response)
         ;
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(
+            HttpSession session
+    ) {
+        session.invalidate();
+        return ResponseEntity.ok(new GenericResponse("Logged out successfully"));
+    }
+
+    @GetMapping("/check-session")
+    public ResponseEntity<?> checkSession(
+            HttpSession session
+    ) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+        String email = (String) session.getAttribute("email");
+
+        if (userId == null) {
+            return ResponseEntity.status(
+                    HttpStatus.OK)
+                    .body(new SessionInfo(false, null, null, false));
+
+        }
+
+        return ResponseEntity.status(
+                HttpStatus.OK)
+                .body(new SessionInfo(true, userId, email, isAdmin));
     }
 }
