@@ -24,10 +24,15 @@ public class AuthenticationController {
         );
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> authenticate(
-//            @RequestBody LoginUserDto dto
-//    ) {
-//
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticate(
+            @RequestBody LoginUserDto dto
+    ) {
+
+        System.out.println("hit login");
+
+        return ResponseEntity.ok(
+                authenticationService.login(dto)
+        );
+    }
 }

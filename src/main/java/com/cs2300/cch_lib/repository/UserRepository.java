@@ -2,7 +2,7 @@ package com.cs2300.cch_lib.repository;
 
 import com.cs2300.cch_lib.dto.RegisterUserDto;
 import com.cs2300.cch_lib.model.User;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,15 +34,19 @@ public class UserRepository {
 
         params.put("email", email);
 
-        return jdbc.queryForObject(sql, params, (rs, rowNum) ->
-                new User(
-                        rs.getInt("user_id"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("name"),
-                        rs.getBoolean("is_admin")
-                )
-        );
+        try {
+            return jdbc.queryForObject(sql, params, (rs, rowNum) ->
+                    new User(
+                            rs.getInt("user_id"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name"),
+                            rs.getBoolean("is_admin")
+                    )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public User getUserById(long user_id) {
@@ -55,15 +59,19 @@ public class UserRepository {
 
         params.put("user_id", user_id);
 
-        return jdbc.queryForObject(sql, params, (rs, rowNum) ->
-                new User(
-                        rs.getInt("user_id"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("name"),
-                        rs.getBoolean("is_admin")
-                )
-        );
+        try {
+            return jdbc.queryForObject(sql, params, (rs, rowNum) ->
+                    new User(
+                            rs.getInt("user_id"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("name"),
+                            rs.getBoolean("is_admin")
+                    )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public User signupUser(RegisterUserDto dto) {

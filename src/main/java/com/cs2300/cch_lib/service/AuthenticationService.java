@@ -1,19 +1,25 @@
 package com.cs2300.cch_lib.service;
 
 
+import com.cs2300.cch_lib.dto.LoginUserDto;
+import com.cs2300.cch_lib.exception.InvalidLoginException;
 import com.cs2300.cch_lib.model.User;
 import com.cs2300.cch_lib.repository.UserRepository;
 import com.cs2300.cch_lib.dto.RegisterUserDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthenticationService(
-            UserRepository userRepository
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
 
     }
 
@@ -21,28 +27,18 @@ public class AuthenticationService {
         return userRepository.signupUser(input);
     }
 
-//    public User authenticate(LoginUserDto input) {
-//        User user = userRepository.findByUsername(input.getUsername())
-//                .orElseThrow(() -> new InvalidLoginException("Invalid username or password"));
-//
-//        try {
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(
-//                            input.getUsername(),
-//                            input.getPassword()
-//                    )
-//            );
-//
-//            // Set the authentication in the security context (creates session)
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//            user.setEnabled(true);
-//            user.setExpopushtoken(input.getExpopushtoken());
-//            userRepository.save(user);
-//
-//            return user;
-//        } catch (AuthenticationException e) {
-//            throw new InvalidLoginException("Invalid username or password");
-//        }
-//    }
+    public User login(LoginUserDto input) {
+        User user = userRepository.getUserByEmail(input.getEmail());
+
+        if (user == null) {
+            throw new InvalidLoginException("Invalid email or password");
+        }
+
+        if (passwordEncoder.matches(input.getPassword(), user.password())) {
+            throw new InvalidLoginException("Invalid email or password");
+        }
+
+        // TODO: Create session
+        return user;
+    }
 }
