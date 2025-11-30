@@ -40,7 +40,9 @@ public class UserRepository {
                             rs.getInt("user_id"),
                             rs.getString("email"),
                             rs.getString("password"),
-                            rs.getString("name"),
+                            rs.getString("f_name"),
+                            rs.getString("m_init"),
+                            rs.getString("l_name"),
                             rs.getBoolean("is_admin")
                     )
             );
@@ -65,7 +67,9 @@ public class UserRepository {
                             rs.getInt("user_id"),
                             rs.getString("email"),
                             rs.getString("password"),
-                            rs.getString("name"),
+                            rs.getString("f_name"),
+                            rs.getString("m_init"),
+                            rs.getString("l_name"),
                             rs.getBoolean("is_admin")
                     )
             );
@@ -76,15 +80,17 @@ public class UserRepository {
 
     public User signupUser(SignupRequest dto) {
         String sql = """
-            INSERT INTO users (email, password, name, is_admin)
-            VALUES (:email, :password, :name, :isAdmin)
+            INSERT INTO users (email, password, f_name, m_init, l_name, is_admin)
+            VALUES (:email, :password, :f_name, :m_init, :l_name, :isAdmin)
         """;
 
         Map<String, Object> params = new HashMap<>();
 
         params.put("email", dto.getEmail());
         params.put("password", passwordEncoder.encode(dto.getPassword()));
-        params.put("name", dto.getName());
+        params.put("f_name", dto.getFName());
+        params.put("m_init", dto.getMInit());
+        params.put("l_name", dto.getLName());
         params.put("isAdmin", dto.getIsAdmin());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

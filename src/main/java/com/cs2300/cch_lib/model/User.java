@@ -4,6 +4,8 @@ public record User(
         Integer userId,
         String email,
         String password,
-        String name,
+        String f_name,
+        String m_init,
+        String l_name,
         Boolean isAdmin
 ) {}

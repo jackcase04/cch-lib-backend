@@ -38,7 +38,9 @@ public class AuthenticationService {
         return new UserResponse(
                 user.userId(),
                 user.email(),
-                user.name(),
+                user.f_name(),
+                user.m_init(),
+                user.l_name(),
                 user.isAdmin()
         );
     }
@@ -57,7 +59,9 @@ public class AuthenticationService {
         return new UserResponse(
                 user.userId(),
                 user.email(),
-                user.name(),
+                user.f_name(),
+                user.m_init(),
+                user.l_name(),
                 user.isAdmin()
         );
     }
