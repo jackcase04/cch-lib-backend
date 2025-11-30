@@ -2,8 +2,11 @@ package com.cs2300.cch_lib.controller;
 
 import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.dto.response.UpdateBookResponse;
+import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.projection.BookListing;
+import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.BookService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,27 +16,45 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
     private final BookService bookService;
+    private final AuthenticationService authenticationService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, AuthenticationService authenticationService) {
         this.bookService = bookService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/listings")
-    public List<BookListing> findAllListings() {
+    public List<BookListing> findAllListings(
+            HttpSession session
+    ) {
+        if (!authenticationService.isLoggedIn(session)) {
+            throw new UnauthorizedException("Please log in");
+        }
+
         return bookService.findAllListings();
     }
 
     @GetMapping("/search")
     public List<BookListing> searchBooks(
-            @RequestParam String search
+            @RequestParam String search,
+            HttpSession session
     ) {
+        if (!authenticationService.isLoggedIn(session)) {
+            throw new UnauthorizedException("Please log in");
+        }
+
         return bookService.searchBooksByTitle(search);
     }
 
     @PatchMapping("/update")
     public UpdateBookResponse updateBook(
-            @RequestBody UpdateBookRequest request
+            @RequestBody UpdateBookRequest request,
+            HttpSession session
     ) {
+        if (!authenticationService.isLoggedIn(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
         return bookService.updateBook(request);
     }
 }
