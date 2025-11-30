@@ -17,4 +17,8 @@ public class EquipmentService {
     public List<EquipmentListing> findAllEquipment() {
         return equipmentRepository.findAllEquipment();
     }
+
+    public List<EquipmentListing> searchEquipmentByType(String search) {
+        return equipmentRepository.searchEquipmentByName(search);
+    }
 }
