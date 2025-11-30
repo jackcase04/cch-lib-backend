@@ -5,6 +5,8 @@ public record BookListing(
         String authorName,
         String bookEdition,
         String condition,
-        String contact,
+        String contact_f_name,
+        String contact_m_init,
+        String contact_l_name,
         Boolean checkedOut
 ) {}

@@ -17,4 +17,8 @@ public class BookService {
     public List<BookListing> findAllListings() {
         return bookRepository.findAllListings();
     }
+
+    public List<BookListing> searchBooksByTitle(String search) {
+        return bookRepository.searchBooksByTitle(search);
+    }
 }
