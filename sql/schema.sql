@@ -44,7 +44,7 @@ CREATE TABLE book (
     checked_out BOOLEAN NOT NULL DEFAULT FALSE,
     pdf_id INTEGER,
     contact INTEGER NOT NULL REFERENCES users(user_id),
-    -- Book can be checked out only by one users at a time
+    -- Book can be checked out only by one user at a time
     checked_out_by INTEGER REFERENCES users(user_id)
 );
 
@@ -67,7 +67,7 @@ CREATE TABLE write (
 CREATE TABLE request (
     book_id INTEGER REFERENCES book(book_id),
     equipment_id INTEGER REFERENCES equipment(equipment_id),
-    -- TODO: Add constraint to ensure only 1 resource can be refrenced
+    -- TODO: Add constraint to ensure only 1 resource can be referenced
     user_id INTEGER NOT NULL REFERENCES users(user_id),
     time_requested TIMESTAMP NOT NULL,
     approved BOOLEAN NOT NULL DEFAULT FALSE,
