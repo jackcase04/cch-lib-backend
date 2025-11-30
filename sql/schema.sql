@@ -20,13 +20,15 @@ CREATE TABLE users (
     user_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(80) NOT NULL,
     password VARCHAR(80) NOT NULL,
-    name VARCHAR(80) NOT NULL,
+    f_name VARCHAR(80),
+    m_init VARCHAR(80),
+    l_name VARCHAR(80),
     is_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE author (
     author_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    f_name VARCHAR(80) NOT NULL,
+    f_name VARCHAR(80),
     m_init VARCHAR(80),
     l_name VARCHAR(80)
 );
@@ -40,7 +42,7 @@ CREATE TABLE book (
     isbn INTEGER,
     additional_info VARCHAR(80),
     checked_out BOOLEAN NOT NULL DEFAULT FALSE,
-    pdf_id INTEGER, 
+    pdf_id INTEGER,
     contact INTEGER NOT NULL REFERENCES users(user_id),
     -- Book can be checked out only by one users at a time
     checked_out_by INTEGER REFERENCES users(user_id)
