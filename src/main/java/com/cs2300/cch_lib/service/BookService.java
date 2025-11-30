@@ -26,6 +26,10 @@ public class BookService {
         return bookRepository.searchBooksByTitle(search);
     }
 
+    public List<BookListing> searchBooksByAuthor(String search) {
+        return bookRepository.searchBooksByAuthor(search);
+    }
+
     public UpdateBookResponse updateBook(UpdateBookRequest request) {
         Book book = bookRepository.getBookById(request.getBookId());
 

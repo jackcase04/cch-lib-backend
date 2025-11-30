@@ -34,8 +34,8 @@ public class BookController {
         return bookService.findAllListings();
     }
 
-    @GetMapping("/search")
-    public List<BookListing> searchBooks(
+    @GetMapping("/search-title")
+    public List<BookListing> searchBooksByTitle(
             @RequestParam String search,
             HttpSession session
     ) {
@@ -44,6 +44,18 @@ public class BookController {
         }
 
         return bookService.searchBooksByTitle(search);
+    }
+
+    @GetMapping("/search-author")
+    public List<BookListing> searchBooksByAuthor(
+            @RequestParam String search,
+            HttpSession session
+    ) {
+        if (!authenticationService.isLoggedIn(session)) {
+            throw new UnauthorizedException("Please log in");
+        }
+
+        return bookService.searchBooksByAuthor(search);
     }
 
     @PatchMapping("/update")

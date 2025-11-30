@@ -34,4 +34,4 @@ build/
 
 dummy_data.sql
 .env
-*-history
+*\\terminal\\history\\*
