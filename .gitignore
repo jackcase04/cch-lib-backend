@@ -34,3 +34,4 @@ build/
 
 dummy_data.sql
 .env
+*-history

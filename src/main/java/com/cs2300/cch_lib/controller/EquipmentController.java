@@ -23,7 +23,7 @@ public class EquipmentController {
         return equipmentService.findAllEquipment();
     }
 
-    @GetMapping("/search-equipment")
+    @GetMapping("/search")
     public List<EquipmentListing> searchEquipment(
             @RequestParam String search
     ) {

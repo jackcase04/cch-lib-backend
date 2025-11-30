@@ -1,7 +1,13 @@
 package com.cs2300.cch_lib.repository;
 
+import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
+import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.projection.BookListing;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -15,6 +21,37 @@ public class BookRepository {
 
     public BookRepository(NamedParameterJdbcTemplate jdbc) {
         this.jdbc = jdbc;
+    }
+
+    public Book getBookById(long book_id) {
+        String sql = """
+            SELECT * FROM book
+            WHERE book_id = :book_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("book_id", book_id);
+
+        try {
+            return jdbc.queryForObject(sql, params, (rs, rowNum) ->
+                    new Book(
+                            rs.getInt("book_id"),
+                            rs.getString("title"),
+                            rs.getString("course"),
+                            rs.getString("book_edition"),
+                            rs.getString("condition"),
+                            rs.getInt("isbn"),
+                            rs.getString("additional_info"),
+                            rs.getBoolean("checked_out"),
+                            rs.getInt("pdf_id"),
+                            rs.getInt("contact"),
+                            rs.getInt("checked_out_by")
+                    )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     private static final String SELECT_ALL_LISTINGS = """
@@ -64,5 +101,34 @@ public class BookRepository {
                         rs.getBoolean("checked_out")
                 )
         );
+    }
+
+    public Book updateBook(UpdateBookRequest request) {
+
+        String sql = """
+            UPDATE book
+            SET
+              title = COALESCE(:title, title),
+              course = COALESCE(:course, course),
+              book_edition = COALESCE(:book_edition, book_edition),
+              condition = COALESCE(:condition, condition),
+              isbn = COALESCE(:isbn, isbn),
+              additional_info = COALESCE(:additional_info, additional_info)
+            WHERE book_id = :book_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("title", request.getTitle());
+        params.put("course", request.getCourse());
+        params.put("book_edition", request.getBookEdition());
+        params.put("condition", request.getCondition());
+        params.put("isbn", request.getIsbn());
+        params.put("additional_info", request.getAdditionalInfo());
+        params.put("book_id", request.getBookId());
+
+        jdbc.update(sql, params);
+
+        return getBookById(request.getBookId());
     }
 }
