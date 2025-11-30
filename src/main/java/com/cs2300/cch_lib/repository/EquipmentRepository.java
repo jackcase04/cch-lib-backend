@@ -1,7 +1,6 @@
 package com.cs2300.cch_lib.repository;
 
-import com.cs2300.cch_lib.model.BookListing;
-import com.cs2300.cch_lib.model.EquipmentListing;
+import com.cs2300.cch_lib.model.projection.EquipmentListing;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 

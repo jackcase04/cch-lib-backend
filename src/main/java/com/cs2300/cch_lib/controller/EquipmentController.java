@@ -1,6 +1,6 @@
 package com.cs2300.cch_lib.controller;
 
-import com.cs2300.cch_lib.model.EquipmentListing;
+import com.cs2300.cch_lib.model.projection.EquipmentListing;
 import com.cs2300.cch_lib.service.EquipmentService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

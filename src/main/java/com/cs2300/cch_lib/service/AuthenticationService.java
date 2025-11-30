@@ -1,13 +1,13 @@
 package com.cs2300.cch_lib.service;
 
 
-import com.cs2300.cch_lib.dto.LoginRequest;
-import com.cs2300.cch_lib.dto.UserResponse;
+import com.cs2300.cch_lib.dto.request.LoginRequest;
+import com.cs2300.cch_lib.dto.response.UserResponse;
 import com.cs2300.cch_lib.exception.InvalidLoginException;
 import com.cs2300.cch_lib.exception.InvalidSignupException;
-import com.cs2300.cch_lib.model.User;
+import com.cs2300.cch_lib.model.entity.User;
 import com.cs2300.cch_lib.repository.UserRepository;
-import com.cs2300.cch_lib.dto.SignupRequest;
+import com.cs2300.cch_lib.dto.request.SignupRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

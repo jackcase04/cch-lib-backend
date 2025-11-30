@@ -1,4 +1,4 @@
-package com.cs2300.cch_lib.dto;
+package com.cs2300.cch_lib.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

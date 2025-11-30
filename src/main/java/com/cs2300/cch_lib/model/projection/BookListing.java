@@ -1,4 +1,4 @@
-package com.cs2300.cch_lib.model;
+package com.cs2300.cch_lib.model.projection;
 
 public record BookListing(
         String title,

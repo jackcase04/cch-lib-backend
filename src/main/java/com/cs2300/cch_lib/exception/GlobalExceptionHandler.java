@@ -1,6 +1,6 @@
 package com.cs2300.cch_lib.exception;
 
-import com.cs2300.cch_lib.dto.ErrorResponse;
+import com.cs2300.cch_lib.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

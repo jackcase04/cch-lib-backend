@@ -1,6 +1,6 @@
 package com.cs2300.cch_lib.service;
 
-import com.cs2300.cch_lib.model.EquipmentListing;
+import com.cs2300.cch_lib.model.projection.EquipmentListing;
 import com.cs2300.cch_lib.repository.EquipmentRepository;
 import org.springframework.stereotype.Service;
 

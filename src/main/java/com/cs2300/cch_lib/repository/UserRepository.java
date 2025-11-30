@@ -1,7 +1,7 @@
 package com.cs2300.cch_lib.repository;
 
-import com.cs2300.cch_lib.dto.SignupRequest;
-import com.cs2300.cch_lib.model.User;
+import com.cs2300.cch_lib.dto.request.SignupRequest;
+import com.cs2300.cch_lib.model.entity.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

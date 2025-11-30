@@ -1,4 +1,4 @@
-package com.cs2300.cch_lib.dto;
+package com.cs2300.cch_lib.dto.response;
 
 public record UserResponse(
         Integer userId,

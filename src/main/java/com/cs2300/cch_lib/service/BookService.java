@@ -1,6 +1,6 @@
 package com.cs2300.cch_lib.service;
 
-import com.cs2300.cch_lib.model.BookListing;
+import com.cs2300.cch_lib.model.projection.BookListing;
 import com.cs2300.cch_lib.repository.BookRepository;
 import org.springframework.stereotype.Service;
 

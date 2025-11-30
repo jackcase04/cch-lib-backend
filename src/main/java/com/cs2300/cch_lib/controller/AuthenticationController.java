@@ -1,6 +1,10 @@
 package com.cs2300.cch_lib.controller;
 
-import com.cs2300.cch_lib.dto.*;
+import com.cs2300.cch_lib.dto.request.LoginRequest;
+import com.cs2300.cch_lib.dto.request.SignupRequest;
+import com.cs2300.cch_lib.dto.response.GenericResponse;
+import com.cs2300.cch_lib.dto.response.SessionInfoResponse;
+import com.cs2300.cch_lib.dto.response.UserResponse;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -69,12 +73,12 @@ public class AuthenticationController {
         if (userId == null) {
             return ResponseEntity.status(
                     HttpStatus.OK)
-                    .body(new SessionInfo(false, null, null, false));
+                    .body(new SessionInfoResponse(false, null, null, false));
 
         }
 
         return ResponseEntity.status(
                 HttpStatus.OK)
-                .body(new SessionInfo(true, userId, email, isAdmin));
+                .body(new SessionInfoResponse(true, userId, email, isAdmin));
     }
 }
