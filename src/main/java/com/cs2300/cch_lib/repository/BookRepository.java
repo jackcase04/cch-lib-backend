@@ -1,5 +1,6 @@
 package com.cs2300.cch_lib.repository;
 
+import com.cs2300.cch_lib.dto.request.AddBookRequest;
 import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.projection.BookListing;
@@ -157,5 +158,27 @@ public class BookRepository {
         jdbc.update(sql, params);
 
         return getBookById(request.getBookId());
+    }
+
+    public Book addNewBook(AddBookRequest request) {
+        String sql = """
+            INSERT INTO book (title, course, book_edition, condition, isbn, additional_info, contact)
+            VALUES (:title, :course, :book_edition, CAST(:condition AS medium), :isbn, :additional_info, :contact);
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("title", request.getTitle());
+        params.put("course", request.getCourse());
+        params.put("book_edition", request.getBookEdition());
+        params.put("condition", request.getCondition());
+        params.put("isbn", request.getIsbn());
+        params.put("additional_info", request.getAdditionalInfo());
+        params.put("contact", request.getContact());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(sql, new MapSqlParameterSource(params), keyHolder, new String[]{"book_id"});
+
+        return getBookById(keyHolder.getKey().longValue());
     }
 }

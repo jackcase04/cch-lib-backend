@@ -5,6 +5,7 @@ import com.cs2300.cch_lib.dto.request.LoginRequest;
 import com.cs2300.cch_lib.dto.response.UserResponse;
 import com.cs2300.cch_lib.exception.InvalidLoginException;
 import com.cs2300.cch_lib.exception.InvalidSignupException;
+import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.entity.User;
 import com.cs2300.cch_lib.repository.UserRepository;
 import com.cs2300.cch_lib.dto.request.SignupRequest;
@@ -31,7 +32,9 @@ public class AuthenticationService {
     }
 
     public Boolean isAdmin(HttpSession session) {
-        return (Boolean) session.getAttribute("isAdmin");
+        Boolean admin = (Boolean) session.getAttribute("isAdmin");
+
+        return admin != null && admin;
     }
 
     public UserResponse signup(SignupRequest input) {
