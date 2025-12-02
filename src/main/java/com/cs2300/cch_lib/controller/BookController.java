@@ -77,7 +77,7 @@ public class BookController {
             @RequestBody UpdateBookRequest request,
             HttpSession session
     ) {
-        if (!authenticationService.isLoggedIn(session)) {
+        if (!authenticationService.isAdmin(session)) {
             throw new UnauthorizedException("Admin access required");
         }
 
