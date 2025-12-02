@@ -1,8 +1,10 @@
 package com.cs2300.cch_lib.controller;
 
+import com.cs2300.cch_lib.dto.request.AddBookRequest;
 import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.dto.response.UpdateBookResponse;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
+import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.projection.BookListing;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.BookService;
@@ -34,8 +36,8 @@ public class BookController {
         return bookService.findAllListings();
     }
 
-    @GetMapping("/search")
-    public List<BookListing> searchBooks(
+    @GetMapping("/search-title")
+    public List<BookListing> searchBooksByTitle(
             @RequestParam String search,
             HttpSession session
     ) {
@@ -44,6 +46,30 @@ public class BookController {
         }
 
         return bookService.searchBooksByTitle(search);
+    }
+
+    @GetMapping("/search-author")
+    public List<BookListing> searchBooksByAuthor(
+            @RequestParam String search,
+            HttpSession session
+    ) {
+        if (!authenticationService.isLoggedIn(session)) {
+            throw new UnauthorizedException("Please log in");
+        }
+
+        return bookService.searchBooksByAuthor(search);
+    }
+
+    @PostMapping("/add")
+    public Book addBook(
+            @RequestBody AddBookRequest request,
+            HttpSession session
+    ) {
+        if (!authenticationService.isAdmin(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
+        return bookService.addNewBook(request);
     }
 
     @PatchMapping("/update")
