@@ -27,8 +27,8 @@ public class UserRepository {
     public User getUserByEmail(String email) {
         String sql = """
             SELECT * FROM users
-            WHERE email = :email;
-        """;
+            WHERE email = :email; 
+        """; //And password.
 
         Map<String, Object> params = new HashMap<>();
 
