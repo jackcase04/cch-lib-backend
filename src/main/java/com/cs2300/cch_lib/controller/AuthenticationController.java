@@ -59,16 +59,14 @@ public class AuthenticationController {
     }
 
     @GetMapping("/user/name")
-    public ResponseEntity<Response<?>> getUserName(HttpSession session) {
-        try {
-            String name = authenticationService.getUserName(session);
-            Response<String> response = new Response<>(true, null, name);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (NoSuchElementException e) {
-            System.err.println("Error fetching user name: " + e.getMessage());
-            Response<Void> error = new Response<>(false, e.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        }
+    public ResponseEntity<Response<?>> getUserName(
+            HttpSession session
+    ) {
+        String name = authenticationService.getUserName(session);
+
+        Response<String> response = new Response<>(true, null, name);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/logout")

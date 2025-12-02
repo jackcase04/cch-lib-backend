@@ -85,9 +85,11 @@ public class AuthenticationService {
 
     public String getUserName(HttpSession session) throws NoSuchElementException {
         String name = (String) session.getAttribute("fName");
-        if(name == null) {
+
+        if (name == null) {
             throw new NoSuchElementException("Unable to find user name.");
         }
+
         return name;
     }
 }
