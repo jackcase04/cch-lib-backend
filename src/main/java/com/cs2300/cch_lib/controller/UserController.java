@@ -29,8 +29,8 @@ public class UserController {
 
     //Gets items the user is currently in possession of.
     @GetMapping("/user-items")
-    public ResponseEntity<Response<?>> getUserItems(@RequestParam Integer userId) { //HttpSession session
-        //Integer userId = (Integer) session.getAttribute("userId");
+    public ResponseEntity<Response<?>> getUserItems(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
         LibraryItems userItems = userService.getUserItems(userId);
         Response<LibraryItems> response = new Response<>(true, "", userItems);
         return ResponseEntity.status(HttpStatus.OK).body(response);
