@@ -3,6 +3,7 @@ package com.cs2300.cch_lib.repository;
 import com.cs2300.cch_lib.dto.request.AddBookRequest;
 import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.model.entity.Book;
+import com.cs2300.cch_lib.model.entity.BookRequest;
 import com.cs2300.cch_lib.model.projection.BookListing;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,18 +12,26 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class BookRepository {
+
+    //Note: Eventually insert dynamic generic search function here and remove specific search functions (e.g., searchBooksByTitle and searchBooksByAuthor)
+    //Note: Eventually alphabetize method order for easier reading.
 
     private final NamedParameterJdbcTemplate jdbc;
 
     public BookRepository(NamedParameterJdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
+
+    private static final String SQL_FIND_BOOK_CHECKOUT_NOTICES = """
+        SELECT b.book_id, b.title, r.request_id 
+        FROM request r
+        JOIN book b ON r.book_id = b.book_id
+        WHERE r.user_id = :user_id AND r.approved = TRUE AND r.fulfilled = FALSE;
+    """;
 
     public Book getBookById(long book_id) {
         String sql = """
@@ -181,4 +190,22 @@ public class BookRepository {
 
         return getBookById(keyHolder.getKey().longValue());
     }
+
+    public ArrayList<BookRequest> findCheckOutNotices(Integer userId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", userId);
+
+        List<BookRequest> books =  jdbc.query(SQL_FIND_BOOK_CHECKOUT_NOTICES, params, (rs, rowNum) -> new BookRequest(
+            rs.getInt("book_id"),
+            rs.getString("title"),
+            rs.getInt("request_id")
+
+        ));
+
+        return new ArrayList<>(books);
+
+    }
+
+
 }

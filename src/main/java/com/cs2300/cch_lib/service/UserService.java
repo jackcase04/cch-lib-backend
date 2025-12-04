@@ -1,28 +1,18 @@
 package com.cs2300.cch_lib.service;
 
-import com.cs2300.cch_lib.model.entity.Book;
-import com.cs2300.cch_lib.model.entity.Equipment;
-import com.cs2300.cch_lib.dto.response.Response;
-import com.cs2300.cch_lib.model.entity.LibraryItems;
-import com.cs2300.cch_lib.repository.UserRepository;
+import com.cs2300.cch_lib.model.entity.*;
 import com.cs2300.cch_lib.repository.BookRepository;
 import com.cs2300.cch_lib.repository.EquipmentRepository;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 @Service
-public class GeneralService {
+public class UserService {
     private final BookRepository bookRepository;
     private final EquipmentRepository equipmentRepository;
 
-    public GeneralService(
+    public UserService(
             BookRepository bookRepository,
             EquipmentRepository equipmentRepository
     ) {
@@ -31,11 +21,11 @@ public class GeneralService {
 
     }
 
-
-    public LibraryItems getCheckOutNotices(String userId) {
-        LinkedList<Book> books = bookRepository.getCheckOutNotices(userId);
-        LinkedList<Equipment> equipment = equipmentRepository.getCheckOutNotices(userId);
-        return new LibraryItems(books, equipment);
+    //Gets items the user requested for checkout that are ready for the user to pick up.
+    public CheckoutNotices getCheckOutNotices(Integer userId) {
+        ArrayList<BookRequest> books = bookRepository.findCheckOutNotices(userId);
+        ArrayList<EquipmentRequest> equipment = equipmentRepository.findCheckOutNotices(userId);
+        return new CheckoutNotices(books, equipment);
     }
 
 
