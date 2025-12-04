@@ -19,8 +19,8 @@ public class UserController {
 
     //Gets items the user requested for checkout that are ready for the user to pick up.
     @GetMapping("/checkout-notices")
-    public ResponseEntity<Response<?>> getCheckOutNotices(@RequestParam Integer userId) { //HttpSession session
-        //String userId = (String) session.getAttribute("userId");
+    public ResponseEntity<Response<?>> getCheckOutNotices(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
         CheckoutNotices checkOutNotices = userService.getCheckOutNotices(userId);
         Response<CheckoutNotices> response = new Response<CheckoutNotices>(true, "", checkOutNotices);
         return ResponseEntity.status(HttpStatus.OK).body(response);
