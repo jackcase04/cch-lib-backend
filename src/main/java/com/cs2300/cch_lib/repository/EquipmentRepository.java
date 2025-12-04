@@ -28,7 +28,7 @@ public class EquipmentRepository {
     """;
 
     private static final String SQL_FIND_EQUIP_USER_ITEMS = """
-        SELECT e.equipment_id, e.name
+        SELECT e.equipment_id, e.equipment_name
         FROM equipment e
         WHERE e.checked_out_by = :user_id;
     """;
