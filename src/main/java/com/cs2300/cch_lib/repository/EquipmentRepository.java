@@ -1,9 +1,13 @@
 package com.cs2300.cch_lib.repository;
 
+import com.cs2300.cch_lib.model.entity.Book;
+import com.cs2300.cch_lib.model.entity.Equipment;
+import com.cs2300.cch_lib.model.entity.EquipmentRequest;
 import com.cs2300.cch_lib.model.projection.EquipmentListing;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +19,13 @@ public class EquipmentRepository {
     public EquipmentRepository(NamedParameterJdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
+
+    private static final String SQL_FIND_EQUIP_CHECKOUT_NOTICES = """
+        SELECT e.equipment_id, e.equipment_name, r.request_id
+        FROM request r
+        JOIN equipment e ON r.equipment_id = e.equipment_id
+        WHERE r.user_id = :user_id AND r.approved = TRUE AND r.fulfilled = FALSE;
+    """;
 
     private static final String SELECT_ALL_LISTINGS = """
         SELECT
@@ -74,4 +85,22 @@ public class EquipmentRepository {
                 )
         );
     }
+
+    public ArrayList<EquipmentRequest> findCheckOutNotices(Integer userId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", userId);
+
+        List<EquipmentRequest> equipment = jdbc.query(SQL_FIND_EQUIP_CHECKOUT_NOTICES, params, (rs, rowNum) -> new EquipmentRequest(
+                rs.getInt("book_id"),
+                rs.getString("title"),
+                rs.getInt("request_id")
+
+        ));
+
+        return new ArrayList<>(equipment);
+
+    }
+
+
 }
