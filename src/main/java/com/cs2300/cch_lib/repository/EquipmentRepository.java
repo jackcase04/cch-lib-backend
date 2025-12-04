@@ -114,7 +114,7 @@ public class EquipmentRepository {
 
         List<Equipment> equipment =  jdbc.query(SQL_FIND_EQUIP_USER_ITEMS, params, (rs, rowNum) -> new Equipment(
                 rs.getInt("equipment_id"),
-                rs.getString("name"),
+                rs.getString("equipment_name"),
                 null,
                 null,
                 null,
