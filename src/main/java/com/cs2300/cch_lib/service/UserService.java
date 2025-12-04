@@ -28,6 +28,13 @@ public class UserService {
         return new CheckoutNotices(books, equipment);
     }
 
+    //Gets items the user is currently in possession of.
+    public LibraryItems getUserItems(Integer userId) {
+        ArrayList<Book> books = bookRepository.findUserBooks(userId);
+        ArrayList<Equipment> equipment = equipmentRepository.findUserEquipment(userId);
+        return new LibraryItems(books, equipment);
+    }
+
 
 
 

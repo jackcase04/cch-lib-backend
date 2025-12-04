@@ -33,6 +33,12 @@ public class BookRepository {
         WHERE r.user_id = :user_id AND r.approved = TRUE AND r.fulfilled = FALSE;
     """;
 
+    private static final String SQL_FIND_BOOK_USER_ITEMS = """
+        SELECT b.book_id, b.title
+        FROM book b
+        WHERE b.checked_out_by = :user_id;
+    """;
+
     public Book getBookById(long book_id) {
         String sql = """
             SELECT * FROM book
@@ -196,16 +202,40 @@ public class BookRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", userId);
 
-        List<BookRequest> books =  jdbc.query(SQL_FIND_BOOK_CHECKOUT_NOTICES, params, (rs, rowNum) -> new BookRequest(
-            rs.getInt("book_id"),
-            rs.getString("title"),
-            rs.getInt("request_id")
+        List<BookRequest> books = jdbc.query(SQL_FIND_BOOK_CHECKOUT_NOTICES, params, (rs, rowNum) -> new BookRequest(
+                rs.getInt("book_id"),
+                rs.getString("title"),
+                rs.getInt("request_id")
 
         ));
 
         return new ArrayList<>(books);
 
     }
+
+    //Note: From the given issue seen below, certain entities would be better implemented as classes (instead of records) for flexible/partial assignment reasons.
+    public ArrayList<Book> findUserBooks(Integer userId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", userId);
+
+        List<Book> books =  jdbc.query(SQL_FIND_BOOK_USER_ITEMS, params, (rs, rowNum) -> new Book(
+                rs.getInt("book_id"),
+                rs.getString("title"),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        ));
+
+        return new ArrayList<>(books);
+    }
+
+
 
 
 }

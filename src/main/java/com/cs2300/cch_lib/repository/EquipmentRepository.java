@@ -27,6 +27,12 @@ public class EquipmentRepository {
         WHERE r.user_id = :user_id AND r.approved = TRUE AND r.fulfilled = FALSE;
     """;
 
+    private static final String SQL_FIND_EQUIP_USER_ITEMS = """
+        SELECT e.equipment_id, e.name
+        FROM equipment e
+        WHERE e.checked_out_by = :user_id;
+    """;
+
     private static final String SELECT_ALL_LISTINGS = """
         SELECT
           E.equipment_name,
@@ -102,5 +108,21 @@ public class EquipmentRepository {
 
     }
 
+    public ArrayList<Equipment> findUserEquipment(Integer userId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", userId);
+
+        List<Equipment> equipment =  jdbc.query(SQL_FIND_EQUIP_USER_ITEMS, params, (rs, rowNum) -> new Equipment(
+                rs.getInt("equipment_id"),
+                rs.getString("name"),
+                null,
+                null,
+                null,
+                null,
+                null
+        ));
+
+        return new ArrayList<>(equipment);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.cs2300.cch_lib.controller;
 
+import com.cs2300.cch_lib.model.entity.LibraryItems;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,15 @@ public class UserController {
         Integer userId = (Integer) session.getAttribute("userId");
         CheckoutNotices checkOutNotices = userService.getCheckOutNotices(userId);
         Response<CheckoutNotices> response = new Response<CheckoutNotices>(true, "", checkOutNotices);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    //Gets items the user is currently in possession of.
+    @GetMapping("/user-items")
+    public ResponseEntity<Response<?>> getUserItems(@RequestParam Integer userId) { //HttpSession session
+        //Integer userId = (Integer) session.getAttribute("userId");
+        LibraryItems userItems = userService.getUserItems(userId);
+        Response<LibraryItems> response = new Response<>(true, "", userItems);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
