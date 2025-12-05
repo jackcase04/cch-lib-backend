@@ -144,7 +144,7 @@ public class EquipmentRepository {
 
         return getEquipmentById(keyHolder.getKey().longValue());
     }
-}
+
     public ArrayList<EquipmentRequest> findCheckOutNotices(Integer userId) {
 
         Map<String, Object> params = new HashMap<>();
@@ -177,5 +177,4 @@ public class EquipmentRepository {
 
         return new ArrayList<>(equipment);
     }
-
 }
