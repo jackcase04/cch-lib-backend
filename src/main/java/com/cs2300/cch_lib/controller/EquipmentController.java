@@ -1,14 +1,13 @@
 package com.cs2300.cch_lib.controller;
 
+import com.cs2300.cch_lib.dto.request.AddEquipmentRequest;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
+import com.cs2300.cch_lib.model.entity.Equipment;
 import com.cs2300.cch_lib.model.projection.EquipmentListing;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.EquipmentService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,5 +43,17 @@ public class EquipmentController {
         }
 
         return equipmentService.searchEquipmentByType(search);
+    }
+
+    @PostMapping("/add")
+    public Equipment addEquipment(
+            @RequestBody AddEquipmentRequest request,
+            HttpSession session
+    ) {
+        if (!authenticationService.isAdmin(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
+        return equipmentService.addEquipment(request);
     }
 }

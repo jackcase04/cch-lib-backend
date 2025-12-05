@@ -9,7 +9,7 @@ import com.cs2300.cch_lib.model.projection.BookListing;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.BookService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
+import com.cs2300.cch_lib.dto.response.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,10 +77,28 @@ public class BookController {
             @RequestBody UpdateBookRequest request,
             HttpSession session
     ) {
-        if (!authenticationService.isLoggedIn(session)) {
+        if (!authenticationService.isAdmin(session)) {
             throw new UnauthorizedException("Admin access required");
         }
 
         return bookService.updateBook(request);
+    }
+
+    @DeleteMapping("/delete")
+    public Response deleteBook(
+            @RequestParam long id,
+            HttpSession session
+    ) {
+        if (!authenticationService.isAdmin(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
+        bookService.deleteBook(id);
+
+        return new Response(
+                true,
+                "Successfully deleted book",
+                null
+        );
     }
 }
