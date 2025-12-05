@@ -4,6 +4,7 @@ import com.cs2300.cch_lib.dto.request.AddBookRequest;
 import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.projection.BookListing;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -180,5 +181,17 @@ public class BookRepository {
         jdbc.update(sql, new MapSqlParameterSource(params), keyHolder, new String[]{"book_id"});
 
         return getBookById(keyHolder.getKey().longValue());
+    }
+
+    public void deleteBook(long book_id) {
+        String sql = """
+            DELETE FROM book WHERE book_id = :book_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("book_id", book_id);
+
+        jdbc.update(sql, params);
     }
 }

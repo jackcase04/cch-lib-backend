@@ -7,11 +7,14 @@ import com.cs2300.cch_lib.dto.response.UpdateBookResponse;
 import com.cs2300.cch_lib.exception.InvalidBookIdException;
 import com.cs2300.cch_lib.model.entity.Author;
 import com.cs2300.cch_lib.model.entity.Book;
+import com.cs2300.cch_lib.model.entity.Write;
 import com.cs2300.cch_lib.model.projection.BookListing;
 import com.cs2300.cch_lib.repository.AuthorRepository;
 import com.cs2300.cch_lib.repository.BookRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -77,5 +80,33 @@ public class BookService {
                 book.isbn(),
                 book.additionalInfo()
         );
+    }
+
+    public void deleteBook(long book_id) {
+        Book book = bookRepository.getBookById(book_id);
+
+        if (bookRepository.getBookById(book_id) == null)  {
+            throw new InvalidBookIdException("Book with that id does not exist");
+        }
+
+        List<Write> writes = authorRepository.getWritesByBook(book_id);
+        List<Integer> authorIds = new ArrayList<>();
+
+        for (Write write : writes) {
+            authorIds.add(write.authorId());
+
+            authorRepository.deleteWrite(book_id, write.authorId());
+        }
+
+        for (Integer authorId : authorIds) {
+            List<Write> works = authorRepository.getWritesByAuthor(authorId);
+
+            if (works == null || works.isEmpty()) {
+                // The author has no works on other books. We should delete them
+                authorRepository.deleteAuthor(authorId);
+            }
+        }
+
+        bookRepository.deleteBook(book_id);
     }
 }
