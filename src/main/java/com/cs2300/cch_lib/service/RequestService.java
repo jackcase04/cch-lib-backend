@@ -1,9 +1,12 @@
 package com.cs2300.cch_lib.service;
 
+import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
+import com.cs2300.cch_lib.dto.request.UpdateEquipmentRequest;
 import com.cs2300.cch_lib.exception.InvalidBookIdException;
 import com.cs2300.cch_lib.exception.InvalidEquipmentIdException;
 import com.cs2300.cch_lib.exception.InvalidResourceException;
 import com.cs2300.cch_lib.exception.InvalidUserIdException;
+import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.entity.Request;
 import com.cs2300.cch_lib.repository.BookRepository;
 import com.cs2300.cch_lib.repository.EquipmentRepository;
@@ -48,5 +51,45 @@ public class RequestService {
         }
 
         return requestRepository.addNewRequest(userId, resourceType, resourceId, requestType);
+    }
+
+    public Request approveOrDenyRequest(long requestId, Boolean allowed) {
+        if (requestRepository.getRequestById(requestId) == null) {
+            throw new InvalidResourceException("Request does not exist");
+        }
+
+        Request request = requestRepository.getRequestById(requestId);
+
+        if (allowed) {
+            System.out.println("request has been approved");
+
+            Integer bookId = request.bookId();
+            Integer equipmentId = request.equipmentId();
+
+            System.out.println("Book id: " + bookId);
+            System.out.println("Equipment id: " + equipmentId);
+
+            if (bookId != 0) {
+                // The request is of a book
+                UpdateBookRequest update = new UpdateBookRequest(
+                    request.userId(),
+                    true
+                );
+
+                bookRepository.updateBook(update, bookId);
+            } else {
+                // The request is of equipment
+                System.out.println("Request to update equipment");
+
+                UpdateEquipmentRequest update = new UpdateEquipmentRequest(
+                    request.userId(),
+                        true
+                );
+
+                equipmentRepository.updateEquipment(update, equipmentId);
+            }
+        }
+
+        return requestRepository.updateRequest(allowed, allowed, (int) requestId);
     }
 }

@@ -84,4 +84,24 @@ public class RequestRepository {
 
         return getRequestById(keyHolder.getKey().longValue());
     }
+
+    public Request updateRequest(Boolean approved, Boolean fulfilled, Integer requestId) {
+        String sql = """
+            UPDATE request
+            SET
+              approved = :approved,
+              fulfilled = :fulfilled
+            WHERE request_id = :request_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("approved", approved);
+        params.put("fulfilled", fulfilled);
+        params.put("request_id", requestId);
+
+        jdbc.update(sql, params);
+
+        return getRequestById(requestId);
+    }
 }

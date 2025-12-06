@@ -14,6 +14,18 @@ public class UpdateEquipmentRequest {
         this.checkedOutBy = checkedOutBy;
     }
 
+    public UpdateEquipmentRequest(
+            Integer checkedOutBy,
+            Boolean checkedOut
+    ) {
+        this.equipmentName = null;
+        this.classRequirement = null;
+        this.checkedOut = checkedOut;
+        this.additionalInfo = null;
+        this.contact = null;
+        this.checkedOutBy = checkedOutBy;
+    }
+
     String equipmentName;
     String classRequirement;
     Boolean checkedOut;

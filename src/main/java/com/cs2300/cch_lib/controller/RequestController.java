@@ -1,15 +1,13 @@
 package com.cs2300.cch_lib.controller;
 
 import com.cs2300.cch_lib.dto.request.AddRequestRequest;
+import com.cs2300.cch_lib.dto.request.DecideRequestRequest;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.entity.Request;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.RequestService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/request")
@@ -38,6 +36,21 @@ public class RequestController {
                 request.getResourceType(),
                 request.getResourceId(),
                 request.getRequestType()
+        );
+    }
+
+    @PatchMapping("/decision")
+    public Request decideOnRequest(
+            @RequestParam long id,
+            @RequestBody DecideRequestRequest request,
+            HttpSession session
+    ) {
+        if (!authenticationService.isAdmin(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
+        return requestService.approveOrDenyRequest(
+            id, request.getApproved()
         );
     }
 }
