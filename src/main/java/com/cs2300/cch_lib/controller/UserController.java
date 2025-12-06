@@ -1,6 +1,8 @@
 package com.cs2300.cch_lib.controller;
 
+import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.entity.LibraryItems;
+import com.cs2300.cch_lib.service.AuthenticationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     //Gets items the user requested for checkout that are ready for the user to pick up.
@@ -36,4 +40,21 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @DeleteMapping("/delete")
+    public Response deleteUser(
+        @RequestParam int id,
+        HttpSession session
+    ) {
+        if (!authenticationService.isAdmin(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
+        userService.deleteUser(id);
+
+        return new Response(
+                true,
+                "Successfully deleted user",
+                null
+        );
+    }
 }

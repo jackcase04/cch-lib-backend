@@ -98,4 +98,16 @@ public class UserRepository {
 
         return getUserById(keyHolder.getKey().longValue());
     }
+
+    public void deleteUser(long userId) {
+        String sql = """
+            DELETE FROM users WHERE user_id = :user_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("user_id", userId);
+
+        jdbc.update(sql, params);
+    }
 }
