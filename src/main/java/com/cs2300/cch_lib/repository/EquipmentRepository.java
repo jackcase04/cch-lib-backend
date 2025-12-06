@@ -177,4 +177,16 @@ public class EquipmentRepository {
 
         return new ArrayList<>(equipment);
     }
+
+    public void deleteEquipment(long id) {
+        String sql = """
+            DELETE FROM equipment WHERE equipment_id = :equipment_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("equipment_id", id);
+
+        jdbc.update(sql, params);
+    }
 }
