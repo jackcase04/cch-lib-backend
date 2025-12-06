@@ -62,14 +62,14 @@ public class BookService {
         return book;
     }
 
-    public UpdateBookResponse updateBook(UpdateBookRequest request) {
-        Book book = bookRepository.getBookById(request.getBookId());
+    public UpdateBookResponse updateBook(UpdateBookRequest request, long bookId) {
+        Book book = bookRepository.getBookById(bookId);
 
         if (book == null)  {
             throw new InvalidBookIdException("Book with that id does not exist");
         }
 
-        book = bookRepository.updateBook(request);
+        book = bookRepository.updateBook(request, bookId);
 
         return new UpdateBookResponse(
                 book.bookId(),

@@ -1,7 +1,9 @@
 package com.cs2300.cch_lib.controller;
 
 import com.cs2300.cch_lib.dto.request.AddEquipmentRequest;
+import com.cs2300.cch_lib.dto.request.UpdateEquipmentRequest;
 import com.cs2300.cch_lib.dto.response.Response;
+import com.cs2300.cch_lib.dto.response.UpdateEquipmentResponse;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.entity.Equipment;
 import com.cs2300.cch_lib.model.projection.EquipmentListing;
@@ -56,6 +58,19 @@ public class EquipmentController {
         }
 
         return equipmentService.addEquipment(request);
+    }
+
+    @PatchMapping("/update")
+    public UpdateEquipmentResponse updateEquipment(
+            @RequestParam long id,
+            @RequestBody UpdateEquipmentRequest request,
+            HttpSession session
+    ) {
+        if (!authenticationService.isAdmin(session)) {
+            throw new UnauthorizedException("Admin access required");
+        }
+
+        return equipmentService.updateEquipment(request, id);
     }
 
     @DeleteMapping("/delete")

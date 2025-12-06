@@ -1,6 +1,7 @@
 package com.cs2300.cch_lib.repository;
 
 import com.cs2300.cch_lib.dto.request.AddEquipmentRequest;
+import com.cs2300.cch_lib.dto.request.UpdateEquipmentRequest;
 import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.entity.Equipment;
 import com.cs2300.cch_lib.model.entity.Book;
@@ -188,5 +189,33 @@ public class EquipmentRepository {
         params.put("equipment_id", id);
 
         jdbc.update(sql, params);
+    }
+
+    public Equipment updateEquipment(UpdateEquipmentRequest request, long equipmentId) {
+        String sql = """
+            UPDATE equipment
+            SET
+              equipment_name = COALESCE(:equipment_name, equipment_name),
+              class_requirement = COALESCE(:class_requirement, class_requirement),
+              checked_out = COALESCE(:checked_out, checked_out),
+              additional_info = COALESCE(:additional_info, additional_info),
+              contact = COALESCE(:contact, contact),
+              checked_out_by = COALESCE(:checked_out_by, checked_out_by)
+            WHERE equipment_id = :equipment_id;
+        """;
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("equipment_name", request.getEquipmentName());
+        params.put("class_requirement", request.getClassRequirement());
+        params.put("checked_out", request.getCheckedOut());
+        params.put("additional_info", request.getAdditionalInfo());
+        params.put("contact", request.getContact());
+        params.put("checked_out_by", request.getCheckedOutBy());
+        params.put("equipment_id", equipmentId);
+
+        jdbc.update(sql, params);
+
+        return getEquipmentById(equipmentId);
     }
 }

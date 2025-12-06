@@ -12,5 +12,8 @@ public class UpdateBookRequest {
     String condition;
     Integer isbn;
     String additionalInfo;
-    Integer bookId;
+    Boolean checkedOut;
+    Integer pdfId;
+    Integer contact;
+    Integer checkedOutBy;
 }

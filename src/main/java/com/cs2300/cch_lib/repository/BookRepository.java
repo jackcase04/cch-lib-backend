@@ -147,7 +147,7 @@ public class BookRepository {
         );
     }
 
-    public Book updateBook(UpdateBookRequest request) {
+    public Book updateBook(UpdateBookRequest request, long bookId) {
 
         String sql = """
             UPDATE book
@@ -157,7 +157,11 @@ public class BookRepository {
               book_edition = COALESCE(:book_edition, book_edition),
               condition = COALESCE(:condition, condition),
               isbn = COALESCE(:isbn, isbn),
-              additional_info = COALESCE(:additional_info, additional_info)
+              additional_info = COALESCE(:additional_info, additional_info),
+              checked_out = COALESCE(:checked_out, checked_out),
+              pdf_id = COALESCE(:pdf_id, pdf_id),
+              contact = COALESCE(:contact, contact),
+              checked_out_by = COALESCE(:checked_out_by, checked_out_by)
             WHERE book_id = :book_id;
         """;
 
@@ -169,11 +173,15 @@ public class BookRepository {
         params.put("condition", request.getCondition());
         params.put("isbn", request.getIsbn());
         params.put("additional_info", request.getAdditionalInfo());
-        params.put("book_id", request.getBookId());
+        params.put("checked_out", request.getCheckedOut());
+        params.put("pdf_id", request.getPdfId());
+        params.put("contact", request.getContact());
+        params.put("checked_out_by", request.getCheckedOutBy());
+        params.put("book_id", bookId);
 
         jdbc.update(sql, params);
 
-        return getBookById(request.getBookId());
+        return getBookById(bookId);
     }
 
     public Book addNewBook(AddBookRequest request) {

@@ -1,6 +1,8 @@
 package com.cs2300.cch_lib.service;
 
 import com.cs2300.cch_lib.dto.request.AddEquipmentRequest;
+import com.cs2300.cch_lib.dto.request.UpdateEquipmentRequest;
+import com.cs2300.cch_lib.dto.response.UpdateEquipmentResponse;
 import com.cs2300.cch_lib.exception.InvalidEquipmentIdException;
 import com.cs2300.cch_lib.model.entity.Equipment;
 import com.cs2300.cch_lib.model.projection.EquipmentListing;
@@ -27,6 +29,25 @@ public class EquipmentService {
 
     public Equipment addEquipment(AddEquipmentRequest request) {
         return equipmentRepository.addNewEquipment(request);
+    }
+
+    public UpdateEquipmentResponse updateEquipment(UpdateEquipmentRequest request, long equipmentId) {
+        Equipment equipment = equipmentRepository.getEquipmentById(equipmentId);
+
+        if (equipment == null)  {
+            throw new InvalidEquipmentIdException("Equipment with that id does not exist");
+        }
+
+        equipment = equipmentRepository.updateEquipment(request, equipmentId);
+
+        return new UpdateEquipmentResponse(
+                equipment.equipmentName(),
+                equipment.classRequirement(),
+                equipment.checkedOut(),
+                equipment.additionalInfo(),
+                equipment.contactId(),
+                equipment.checkedOutBy()
+        );
     }
 
     public void deleteEquipment(long id) {

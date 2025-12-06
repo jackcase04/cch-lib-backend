@@ -74,6 +74,7 @@ public class BookController {
 
     @PatchMapping("/update")
     public UpdateBookResponse updateBook(
+            @RequestParam long id,
             @RequestBody UpdateBookRequest request,
             HttpSession session
     ) {
@@ -81,7 +82,7 @@ public class BookController {
             throw new UnauthorizedException("Admin access required");
         }
 
-        return bookService.updateBook(request);
+        return bookService.updateBook(request, id);
     }
 
     @DeleteMapping("/delete")
