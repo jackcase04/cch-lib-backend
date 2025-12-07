@@ -25,6 +25,7 @@ public class LibraryController {
     public LibraryItems searchLibrary(
             @RequestParam(required = false) String bookTitle,
             @RequestParam(required = false) String bookAuthor,
+            @RequestParam(required = false) Integer isbn,
             @RequestParam(required = false) String equipmentName,
             HttpSession session
     ) {
@@ -32,6 +33,6 @@ public class LibraryController {
             throw new UnauthorizedException("Please log in");
         }
 
-        return libraryService.searchLibrary(bookTitle, bookAuthor, equipmentName);
+        return libraryService.searchLibrary(bookTitle, bookAuthor, isbn, equipmentName);
     }
 }

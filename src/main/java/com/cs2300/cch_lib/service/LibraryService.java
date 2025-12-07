@@ -22,9 +22,9 @@ public class LibraryService {
         this.equipmentRepository = equipmentRepository;
     }
 
-    public LibraryItems searchLibrary(String bookTitle, String bookAuthor, String equipmentName) {
+    public LibraryItems searchLibrary(String bookTitle, String bookAuthor, Integer isbn, String equipmentName) {
 
-        List<Book> books = bookRepository.searchBooks(bookTitle, bookAuthor);
+        List<Book> books = bookRepository.searchBooks(bookTitle, bookAuthor, isbn);
 
         List<Equipment> equipment = equipmentRepository.searchEquipmentByName(equipmentName);
 

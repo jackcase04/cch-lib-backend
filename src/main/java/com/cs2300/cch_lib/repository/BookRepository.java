@@ -92,7 +92,7 @@ public class BookRepository {
         );
     }
 
-    public List<Book> searchBooks(String title, String author) {
+    public List<Book> searchBooks(String title, String author, Integer isbn) {
         StringBuilder sb = new StringBuilder();
 
         String sql = """
@@ -122,12 +122,26 @@ public class BookRepository {
             params.put("title", "%" + title + "%");
 
             if (author != null) {
-                sb.append(" AND A.f_name ILIKE :author OR A.l_name ILIKE :author");
+                sb.append(" AND (A.f_name ILIKE :author OR A.l_name ILIKE :author)");
                 params.put("author", "%" + author + "%");
             }
+
+            if (isbn != null) {
+                sb.append(" AND B.isbn = :isbn");
+                params.put("isbn", isbn);
+            }
+
         } else if (author != null) {
-            sb.append(" WHERE A.f_name ILIKE :author OR A.l_name ILIKE :author");
+            sb.append(" WHERE (A.f_name ILIKE :author OR A.l_name ILIKE :author)");
             params.put("author", "%" + author + "%");
+
+            if (isbn != null) {
+                sb.append(" AND B.isbn = :isbn");
+                params.put("isbn", isbn);
+            }
+        } else if (isbn != null) {
+            sb.append(" WHERE B.isbn = :isbn");
+            params.put("isbn", isbn);
         }
 
         sb.append(";");
