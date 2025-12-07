@@ -22,16 +22,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(
-            @RequestBody SignupRequest dto,
-            HttpSession session
-    ) {
+    public ResponseEntity<?> signup(@RequestBody SignupRequest dto) {
 
         UserResponse response = authenticationService.signup(dto);
-
-        session.setAttribute("userId", response.userId());
-        session.setAttribute("isAdmin", response.isAdmin());
-        session.setAttribute("email", response.email());
 
         return ResponseEntity.status(
                 HttpStatus.CREATED)

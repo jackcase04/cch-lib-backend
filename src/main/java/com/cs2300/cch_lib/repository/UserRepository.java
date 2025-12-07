@@ -91,7 +91,7 @@ public class UserRepository {
         params.put("f_name", dto.getFName());
         params.put("m_init", dto.getMInit());
         params.put("l_name", dto.getLName());
-        params.put("isAdmin", dto.getIsAdmin());
+        params.put("isAdmin", false); //Default to false. State alterable by admin action only.
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(sql, new MapSqlParameterSource(params), keyHolder, new String[]{"user_id"});
