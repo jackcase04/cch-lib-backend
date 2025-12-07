@@ -23,7 +23,7 @@ public class EquipmentService {
         return equipmentRepository.findAllEquipment();
     }
 
-    public List<EquipmentListing> searchEquipmentByType(String search) {
+    public List<Equipment> searchEquipmentByType(String search) {
         return equipmentRepository.searchEquipmentByName(search);
     }
 

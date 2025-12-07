@@ -95,34 +95,33 @@ public class EquipmentRepository {
         );
     }
 
-    public List<EquipmentListing> searchEquipmentByName(String search) {
+    public List<Equipment> searchEquipmentByName(String search) {
         String sql = """
-            SELECT
-              E.equipment_name,
-              E.class_requirement,
-              E.checked_out,
-              E.additional_info,
-              U.f_name AS contact_f_name,
-              U.m_init AS contact_m_init,
-              U.l_name AS contact_l_name
-            FROM equipment AS E
-            JOIN users AS U ON E.contact = U.user_id
-            WHERE E.equipment_name ILIKE :search;
+            SELECT * FROM equipment AS E
         """;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(sql);
 
         Map<String, Object> params = new HashMap<>();
 
-        params.put("search", "%" + search + "%");
+        if (search != null) {
+            sb.append(" WHERE equipment_name ILIKE :search");
+            params.put("search", "%" + search + "%");
+        }
+
+        sb.append(";");
+        sql = sb.toString();
 
         return jdbc.query(sql, params, (rs, rowNum) ->
-                new EquipmentListing(
+                new Equipment(
+                        rs.getInt("equipment_id"),
                         rs.getString("equipment_name"),
                         rs.getString("class_requirement"),
-                        rs.getString("checked_out"),
+                        rs.getBoolean("checked_out"),
                         rs.getString("additional_info"),
-                        rs.getString("contact_f_name"),
-                        rs.getString("contact_m_init"),
-                        rs.getString("contact_l_name")
+                        rs.getInt("contact"),
+                        rs.getInt("checked_out_by")
                 )
         );
     }

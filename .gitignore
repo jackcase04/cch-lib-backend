@@ -35,3 +35,4 @@ build/
 dummy_data.sql
 .env
 *\\terminal\\history\\*
+*.dump

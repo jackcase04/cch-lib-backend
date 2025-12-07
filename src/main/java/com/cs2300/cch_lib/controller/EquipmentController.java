@@ -37,7 +37,7 @@ public class EquipmentController {
     }
 
     @GetMapping("/search")
-    public List<EquipmentListing> searchEquipment(
+    public List<Equipment> searchEquipment(
             @RequestParam String search,
             HttpSession session
     ) {

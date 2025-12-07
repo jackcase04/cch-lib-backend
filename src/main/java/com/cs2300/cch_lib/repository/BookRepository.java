@@ -5,7 +5,6 @@ import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.entity.BookRequest;
 import com.cs2300.cch_lib.model.projection.BookListing;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -93,6 +92,66 @@ public class BookRepository {
         );
     }
 
+    public List<Book> searchBooks(String title, String author) {
+        StringBuilder sb = new StringBuilder();
+
+        String sql = """
+            SELECT
+                B.book_id,
+                B.title,
+                B.course,
+                B.book_edition,
+                B.condition,
+                B.isbn,
+                B.additional_info,
+                B.checked_out,
+                B.pdf_id,
+                B.contact,
+                B.checked_out_by
+            FROM book AS B
+            JOIN write AS W ON B.book_id = W.book_id
+            JOIN author AS A ON W.author_id = A.author_id
+        """;
+
+        sb.append(sql);
+
+        Map<String, Object> params = new HashMap<>();
+
+        if (title != null) {
+            sb.append(" WHERE B.title ILIKE :title");
+            params.put("title", "%" + title + "%");
+
+            if (author != null) {
+                sb.append(" AND A.f_name ILIKE :author OR A.l_name ILIKE :author");
+                params.put("author", "%" + author + "%");
+            }
+        } else if (author != null) {
+            sb.append(" WHERE A.f_name ILIKE :author OR A.l_name ILIKE :author");
+            params.put("author", "%" + author + "%");
+        }
+
+        sb.append(";");
+        sql = sb.toString();
+
+        return jdbc.query(sql, params, (rs, rowNum) ->
+                new Book(
+                        rs.getInt("book_id"),
+                        rs.getString("title"),
+                        rs.getString("course"),
+                        rs.getString("book_edition"),
+                        rs.getString("condition"),
+                        rs.getInt("isbn"),
+                        rs.getString("additional_info"),
+                        rs.getBoolean("checked_out"),
+                        rs.getInt("pdf_id"),
+                        rs.getInt("contact"),
+                        rs.getInt("checked_out_by")
+                )
+        );
+    }
+
+
+// We may just not need these for now.
     public List<BookListing> searchBooksByTitle(String search) {
         String sql = """
             SELECT B.title, A.f_name, B.book_edition, B.condition, U.f_name AS contact_f_name, U.m_init AS contact_m_init, U.l_name AS contact_l_name, B.checked_out FROM book AS B
