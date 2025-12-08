@@ -1,11 +1,14 @@
 package com.cs2300.cch_lib.controller;
 
 import com.cs2300.cch_lib.dto.request.SearchLibraryRequest;
+import com.cs2300.cch_lib.dto.response.Response;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.entity.LibraryItems;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.LibraryService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +23,7 @@ public class LibraryController {
     }
 
     @PostMapping("/search")
-    public LibraryItems searchLibrary(
+    public ResponseEntity<Response<?>> searchLibrary(
             @RequestBody SearchLibraryRequest request,
             HttpSession session
     ) {
@@ -28,12 +31,16 @@ public class LibraryController {
             throw new UnauthorizedException("Please log in");
         }
 
-        return libraryService.searchLibrary(
+        LibraryItems items = libraryService.searchLibrary(
                 request.getSelectedSearchOption(),
                 request.getBookTitle(),
                 request.getBookAuthor(),
                 request.getIsbn(),
                 request.getEquipmentName()
         );
+
+        Response<LibraryItems> response = new Response<>(true, "", items);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
