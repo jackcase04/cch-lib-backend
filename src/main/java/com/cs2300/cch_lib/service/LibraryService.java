@@ -1,5 +1,6 @@
 package com.cs2300.cch_lib.service;
 
+import com.cs2300.cch_lib.dto.response.ItemCountResponse;
 import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.entity.Equipment;
 import com.cs2300.cch_lib.model.entity.LibraryItems;
@@ -37,5 +38,12 @@ public class LibraryService {
         }
 
         return new LibraryItems(books, equipment);
+    }
+
+    public ItemCountResponse countItems() {
+        return new ItemCountResponse(
+                bookRepository.countBooks(),
+                equipmentRepository.countEquipment()
+        );
     }
 }

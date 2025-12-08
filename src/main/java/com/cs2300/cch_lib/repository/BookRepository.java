@@ -5,6 +5,7 @@ import com.cs2300.cch_lib.dto.request.UpdateBookRequest;
 import com.cs2300.cch_lib.model.entity.Book;
 import com.cs2300.cch_lib.model.entity.BookRequest;
 import com.cs2300.cch_lib.model.projection.BookListing;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -327,5 +328,17 @@ public class BookRepository {
         ));
 
         return new ArrayList<>(books);
+    }
+
+    public Integer countBooks() {
+        String sql = """
+            SELECT COUNT(book_id) AS count FROM book;
+        """;
+
+        try {
+            return jdbc.queryForObject(sql, Map.of(), Integer.class);
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 }

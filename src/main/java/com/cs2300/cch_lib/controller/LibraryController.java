@@ -1,6 +1,7 @@
 package com.cs2300.cch_lib.controller;
 
 import com.cs2300.cch_lib.dto.request.SearchLibraryRequest;
+import com.cs2300.cch_lib.dto.response.ItemCountResponse;
 import com.cs2300.cch_lib.dto.response.Response;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.entity.LibraryItems;
@@ -42,5 +43,16 @@ public class LibraryController {
         Response<LibraryItems> response = new Response<>(true, "", items);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/count")
+    public ItemCountResponse countItems(
+            HttpSession session
+    ) {
+        if (!authenticationService.isLoggedIn(session)) {
+            throw new UnauthorizedException("Please log in");
+        }
+
+        return libraryService.countItems();
     }
 }
