@@ -5,10 +5,7 @@ import com.cs2300.cch_lib.model.entity.LibraryItems;
 import com.cs2300.cch_lib.service.AuthenticationService;
 import com.cs2300.cch_lib.service.LibraryService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/library-items")
@@ -21,7 +18,7 @@ public class LibraryController {
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public LibraryItems searchLibrary(
             @RequestParam(required = false) String bookTitle,
             @RequestParam(required = false) String bookAuthor,
