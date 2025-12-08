@@ -1,5 +1,6 @@
 package com.cs2300.cch_lib.controller;
 
+import com.cs2300.cch_lib.dto.request.SearchLibraryRequest;
 import com.cs2300.cch_lib.exception.UnauthorizedException;
 import com.cs2300.cch_lib.model.entity.LibraryItems;
 import com.cs2300.cch_lib.service.AuthenticationService;
@@ -20,16 +21,19 @@ public class LibraryController {
 
     @PostMapping("/search")
     public LibraryItems searchLibrary(
-            @RequestParam(required = false) String bookTitle,
-            @RequestParam(required = false) String bookAuthor,
-            @RequestParam(required = false) Integer isbn,
-            @RequestParam(required = false) String equipmentName,
+            @RequestBody SearchLibraryRequest request,
             HttpSession session
     ) {
         if (!authenticationService.isLoggedIn(session)) {
             throw new UnauthorizedException("Please log in");
         }
 
-        return libraryService.searchLibrary(bookTitle, bookAuthor, isbn, equipmentName);
+        return libraryService.searchLibrary(
+                request.getSelectedSearchOption(),
+                request.getBookTitle(),
+                request.getBookAuthor(),
+                request.getIsbn(),
+                request.getEquipmentName()
+        );
     }
 }
